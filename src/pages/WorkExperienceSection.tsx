@@ -12,7 +12,7 @@ const WorkExperienceSection = forwardRef<HTMLElement>((_, ref) => {
     <section
       id="work"
       ref={ref}
-      className="min-h-screen flex flex-col items-center justify-center"
+      className="min-h-screen flex flex-col items-center justify-center bg-[#FFE3A9]"
     >
       <h1 className="text-4xl font-bold">Work Experience</h1>
       <p className="mt-2">Product Development Engineer</p>

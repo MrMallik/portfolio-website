@@ -7,7 +7,7 @@ import { SidebarEntries } from "@/service";
 
 const Content = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col snap-y snap-mandatory h-screen overflow-y-scroll scroll-smooth">
       {SidebarEntries.map((entry) => {
         switch (entry.name) {
           case "Education":
