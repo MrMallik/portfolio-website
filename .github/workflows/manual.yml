@@ -49,3 +49,4 @@ jobs:
           key: ${{ secrets.PROD_SSH_KEY }}
           source: "dist/*"
           target: "/var/www/dopaminegateway.online"
+          rm: true
