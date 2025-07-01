@@ -60,5 +60,22 @@ jobs:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
-          source: "dist/."
+          source: "dist/*"
           target: "/var/www/dopaminegateway.online"
+
+       # Copy from dist/ dir and remove it
+       # TODO: Unnecessary step remove it later by fixing it
+      - name: Remove dist/
+        if: ${{ github.event.inputs.environment == 'production' }}
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            echo "Copying from dist to prod dir..."
+            cp -r /var/www/dopaminegateway.online/dist/* /var/www/dopaminegateway.online/
+            echo "Removing dist folder..."
+            rm -rf /var/www/dopaminegateway.online/dist/
+            echo "All done..."
+
