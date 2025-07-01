@@ -60,5 +60,5 @@ jobs:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
-          source: "dist/*"
+          source: "dist/."
           target: "/var/www/dopaminegateway.online"
