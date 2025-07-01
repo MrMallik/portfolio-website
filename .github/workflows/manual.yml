@@ -23,7 +23,7 @@ jobs:
     steps:
       # Checkout code
       - name: Checkout repository
-        uses: actions/checkout@4
+        uses: actions/checkout@v4
 
       # Step 2: Setup nodejs
       - name: Setup NodeJS
