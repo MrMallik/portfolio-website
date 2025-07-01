@@ -39,6 +39,19 @@ jobs:
       - name: Build app
         run: npm run build
 
+      # Clean old files beforehand
+      - name: Clean and deploy to production server
+        if: ${{ github.event.inputs.environment == 'production' }}
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            echo "Cleaning target directory..."
+            rm -rf /var/www/dopaminegateway.online/*
+            echo "Uploading new build..."
+
       # Deploy to prod server
       - name: Deploy to production server
         if: ${{ github.event.inputs.environment == 'production' }}
@@ -49,4 +62,3 @@ jobs:
           key: ${{ secrets.PROD_SSH_KEY }}
           source: "dist/*"
           target: "/var/www/dopaminegateway.online"
-          rm: true
