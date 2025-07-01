@@ -1,9 +1,9 @@
-import Footer from "./Footer";
-import EducationSection from "./pages/sections/EducationSection";
+// import Footer from "./Footer";
+// import EducationSection from "./pages/sections/EducationSection";
 import LandingPage from "./pages/sections/LandingPage";
-import ProjectsSection from "./pages/sections/ProjectsSection";
+// import ProjectsSection from "./pages/sections/ProjectsSection";
 import WorkExperienceSection from "./pages/sections/WorkExperienceSection";
-import { SidebarEntries } from "@/service";
+// import { SidebarEntries } from "@/service";
 
 const Content = () => {
   return (
