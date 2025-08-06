@@ -1,7 +1,12 @@
 import Content from "@/Content";
 
 const Layout = () => {
-  return <Content />;
+  return (
+    <div>
+      {/* <ActionMenu /> */}
+      <Content />
+    </div>
+  );
 };
 
 export default Layout;
