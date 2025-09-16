@@ -73,21 +73,21 @@ const EducationSection = forwardRef<HTMLElement>((_, ref) => {
           {education.map((ed) => (
             <div
               key={ed.school + ed.degree}
-              className="relative flex flex-col items-center md:items-start bg-white rounded-2xl p-6 sm:p-8 shadow-2xl w-full z-10"
+              className="relative flex flex-col items-center md:items-start bg-white rounded-2xl p-3 sm:p-8 shadow-2xl w-full z-10"
             >
               <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 text-[#2c0735] text-center md:text-left">
                 {ed.school}
               </div>
               <div className="flex flex-col sm:flex-row items-center md:items-start gap-2 mb-4">
-                <span className="inline-block bg-[#858ae3] text-white text-xs sm:text-sm font-semibold px-3 py-1 rounded-full shadow">
+                <span className="inline-block bg-[#858ae3] text-white text-xs sm:text-sm font-semibold px-2 py-0.5 sm:px-3 sm:py-1 rounded-full shadow">
                   {ed.degree}
                 </span>
-                <span className="inline-block bg-[#f2e6ee] text-[#2c0735] text-xs sm:text-sm font-semibold px-3 py-1 rounded-full shadow">
+                <span className="inline-block bg-[#f2e6ee] text-[#2c0735] text-xs sm:text-sm font-semibold px-2 py-0.5 sm:px-3 sm:py-1 rounded-full shadow">
                   {ed.period}
                 </span>
               </div>
               <div className="w-16 h-1 bg-[#97dffc] rounded-full mb-4 md:ml-0 mx-auto"></div>
-              <div className="text-base sm:text-lg md:text-xl text-center md:text-left text-[#2c0735]">
+              <div className="text-sm sm:text-lg md:text-xl text-center md:text-left text-[#2c0735]">
                 {ed.description}
               </div>
             </div>

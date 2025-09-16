@@ -1,6 +1,6 @@
 import EducationSection from "./pages/sections/EducationSection";
 import LandingPage from "./pages/sections/LandingPage";
-import ProjectsSection from "./pages/sections/ProjectsSection";
+// import ProjectsSection from "./pages/sections/ProjectsSection";
 import WorkExperienceSection from "./pages/sections/WorkExperienceSection";
 
 const Content = () => {
@@ -9,7 +9,7 @@ const Content = () => {
       <LandingPage />
       <WorkExperienceSection />
       <EducationSection />
-      <ProjectsSection />
+      {/* <ProjectsSection /> */}
     </div>
   );
 };
