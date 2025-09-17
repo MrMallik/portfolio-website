@@ -1,106 +1,71 @@
-import { useState } from "react";
-import Modal from "@/components/Modal";
+import { Button } from "@/components/ui/button";
+import { FiExternalLink } from "react-icons/fi";
 
-const actions = [
-  { label: "Contact" },
-  { label: "Download Resume" },
-  { label: "Settings" },
-];
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
+import { useNavigate } from "react-router-dom";
+
+// const actions = [
+//   { label: "Contact", key: "contact" },
+//   { label: "Settings", key: "settings" },
+// ];
 
 export default function ActionMenu() {
-  const [open, setOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState<string | undefined>(undefined);
-
-  const handleAction = (label: string) => {
-    console.log(`Action clicked: ${label}`);
-    setOpen(true);
-    setModalTitle(label);
-    setModalOpen(true);
-  };
-
+  const navigate = useNavigate();
   return (
-    <>
-      {/* Desktop Dropdown */}
-      <div className="hidden md:block fixed top-6 right-8 z-50">
-        <div className="relative">
-          <button
-            className="bg-[#4e148c] text-white px-4 py-2 rounded-lg shadow-lg hover:bg-[#5939b1] transition"
-            onClick={() => setOpen((v) => !v)}
-          >
-            Actions
-          </button>
-          {open && (
-            <div className="absolute right-0 mt-2 w-48 bg-white text-[#2c0735] rounded-lg shadow-xl border border-gray-200">
-              {actions.map((a) => (
-                <button
-                  key={a.label}
-                  className="w-full text-left px-4 py-2 hover:bg-[#f2e6ee] transition"
-                  onClick={() => handleAction(a.label)}
-                >
-                  {a.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Bottom Sheet */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
-        <button
-          className="bg-[#4e148c] text-white p-4 rounded-full shadow-lg hover:bg-[#5939b1] transition"
-          onClick={() => setOpen(true)}
-          aria-label="Open actions"
-        >
-          <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="12" fill="#4e148c" />
-            <path
-              stroke="#fff"
-              strokeWidth="2"
-              strokeLinecap="round"
-              d="M8 12h8M12 8v8"
-            />
-          </svg>
-        </button>
-        {/* Bottom Sheet Overlay */}
-        {open && (
-          <>
-            <div
-              className="fixed inset-0 bg-black/40 z-40"
-              onClick={() => setOpen(false)}
-            ></div>
-            <div className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-2xl p-6 pb-10 flex flex-col gap-4 animate-slideup shadow-2xl">
-              <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
-              {actions.map((a) => (
-                <button
-                  key={a.label}
-                  className="w-full text-lg text-[#2c0735] py-3 rounded-lg hover:bg-[#f2e6ee] transition"
-                  onClick={() => handleAction(a.label)}
-                >
-                  {a.label}
-                </button>
-              ))}
-              <Modal
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
-                title={modalTitle}
-                actions={
-                  <button
-                    className="bg-[#4e148c] text-white px-4 py-2 rounded-lg hover:bg-[#5939b1] transition"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    Close
-                  </button>
-                }
+    <div className="fixed top-6 left-6 z-50 flex items-center gap-1">
+      <NavigationMenu className="list-none gap-1">
+        {/* <NavigationMenuItem>
+          <NavigationMenuTrigger className="bg-transparent border-none text-base font-semibold transition-colors duration-150 hover:bg-[#f2e6ee] hover:text-[#4e148c] focus:bg-[#e0d7fa] focus:text-[#4e148c] active:bg-[#e0d7fa] active:text-[#4e148c] px-4 py-2 rounded-lg">
+            Quick Actions
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="flex flex-col gap-1 p-2">
+            {actions.map((action) => (
+              <Button
+                key={action.key}
+                variant="ghost"
+                className="justify-start w-full rounded-lg px-4 py-2 text-base font-semibold transition-colors duration-150 hover:bg-[#f2e6ee] hover:text-[#4e148c] focus:bg-[#e0d7fa] focus:text-[#4e148c] active:bg-[#e0d7fa] active:text-[#4e148c]"
+                onClick={() => console.log(action.label)}
               >
-                <div className="text-center text-lg">Coming soon.</div>
-              </Modal>
-            </div>
-          </>
-        )}
-      </div>
-      {/* slideup animation is in global CSS */}
-    </>
+                {action.label}
+              </Button>
+            ))}
+          </NavigationMenuContent>
+        </NavigationMenuItem> */}
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                navigate("/blog");
+              }}
+            >
+              Blog
+            </Button>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                window.open(
+                  "https://r2.pritabrata.com/resume_pritabrata.pdf",
+                  "_blank",
+                  "noopener,noreferrer"
+                );
+              }}
+            >
+              <div className="flex items-center gap-1">
+                View Resume <FiExternalLink />
+              </div>
+            </Button>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+      </NavigationMenu>
+    </div>
   );
 }
