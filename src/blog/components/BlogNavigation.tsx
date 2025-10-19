@@ -1,6 +1,13 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Edit3 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export function BlogNavigation() {
+  const navigate = useNavigate();
+
+  const handleComposeClick = () => {
+    navigate("/blog/compose");
+  };
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
@@ -15,7 +22,14 @@ export function BlogNavigation() {
             </a>
           </nav>
           <nav className="flex items-center space-x-4">
-            {/* Add search and other navigation items here later */}
+            <Button
+              variant="ghost"
+              onClick={handleComposeClick}
+              className="text-[#4e148c] hover:text-[#2c0735] hover:bg-[#F2E6EE]/20 transition-colors"
+            >
+              <Edit3 className="h-4 w-4 mr-2" />
+              Compose
+            </Button>
           </nav>
         </div>
       </div>

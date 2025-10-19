@@ -4,7 +4,7 @@ import { BlogList } from "@/blog/components/BlogList";
 import { BlogPost } from "@/blog/components/BlogPost";
 import { mockBlogs } from "@/blog/data/mockBlogs";
 
-type View = "list" | "post";
+type View = "list" | "post" | "compose";
 
 interface BlogState {
   view: View;
