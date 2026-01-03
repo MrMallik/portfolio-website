@@ -40,7 +40,7 @@ export default function ActionMenu() {
             <Button
               variant="ghost"
               onClick={() => {
-                navigate("/blog");
+                navigate("/blog/");
               }}
             >
               Blog
