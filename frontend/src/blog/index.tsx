@@ -1,11 +1,34 @@
-import { Routes, Route, useParams, Link } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Post from "./components/Post";
-import { mockBlogs } from "./data/mockBlogs";
+import BlogEditor from "./components/BlogEditor";
+import BlogList from "./components/BlogList";
 import Navigation from "./components/Navigation";
+import { getAllPosts, initializeStorage } from "./storage/blogStorage";
+import type { PostType } from "./service";
+// import "../blog/styles/quill-custom.css";
 
 const PostWithSlug = () => {
   const { slug } = useParams<{ slug: string }>();
-  const post = mockBlogs.find((blog) => blog.slug === slug);
+  const [post, setPost] = useState<PostType | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const posts = getAllPosts();
+    const foundPost = posts.find((p) => p.slug === slug);
+    setPost(foundPost || null);
+    setLoading(false);
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-muted/30 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!post) {
     return (
@@ -24,22 +47,23 @@ const PostWithSlug = () => {
 };
 
 const BlogHome = () => {
+  const [posts, setPosts] = useState<PostType[]>([]);
+
+  const loadPosts = () => {
+    const allPosts = getAllPosts();
+    setPosts(allPosts);
+  };
+
+  useEffect(() => {
+    initializeStorage();
+    loadPosts();
+  }, []);
+
   return (
     <div className="min-h-screen bg-muted/30">
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
         <h1 className="text-4xl font-bold mb-8">Blog</h1>
-        <ul className="space-y-4">
-          {mockBlogs.map((blog) => (
-            <li key={blog.slug}>
-              <Link
-                to={`/blog/${blog.slug}`}
-                className="text-primary hover:underline text-lg"
-              >
-                {blog.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <BlogList posts={posts} onPostDeleted={loadPosts} />
       </div>
     </div>
   );
@@ -51,6 +75,8 @@ const Blog = () => {
       <Navigation />
       <Routes>
         <Route index element={<BlogHome />} />
+        <Route path="new" element={<BlogEditor />} />
+        <Route path="edit/:slug" element={<BlogEditor />} />
         <Route path=":slug" element={<PostWithSlug />} />
       </Routes>
     </div>
