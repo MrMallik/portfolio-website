@@ -33,11 +33,13 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          cd frontend && npm install
 
       # Build the app
       - name: Build app
-        run: npm run build
+        run: cd frontend && npm run build
 
       # Clean old files beforehand
       - name: Clean and deploy to production server
@@ -60,7 +62,7 @@ jobs:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
-          source: "dist/*"
+          source: "frontend/dist/*"
           target: "/var/www/dopaminegateway.online"
 
        # Copy from dist/ dir and remove it
