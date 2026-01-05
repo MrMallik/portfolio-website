@@ -1,7 +1,7 @@
 import { Routes, Route, useParams, Link } from "react-router-dom";
-import Navigation from "./components/Navigation";
 import Post from "./components/Post";
 import { mockBlogs } from "./data/mockBlogs";
+import Navigation from "./components/Navigation";
 
 const PostWithSlug = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -47,12 +47,13 @@ const BlogHome = () => {
 
 const Blog = () => {
   return (
-    <>
+    <div>
+      <Navigation />
       <Routes>
         <Route index element={<BlogHome />} />
         <Route path=":slug" element={<PostWithSlug />} />
       </Routes>
-    </>
+    </div>
   );
 };
 
