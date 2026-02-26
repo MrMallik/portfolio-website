@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
-import type { Tags, PostStatus } from '@/blog/service';
-import { createPost, updatePost, getPostBySlug, getAllSlugs } from '@/blog/storage/blogStorage';
-import { slugify, generateUniqueSlug } from '@/blog/utils/slugify';
+import { getJson, postJson, type Tags, type PostStatus } from '@/blog/service';
+import { slugify } from '@/blog/utils/slugify';
 
 const BlogEditor = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -18,6 +17,7 @@ const BlogEditor = () => {
     const [isEditingSlug, setIsEditingSlug] = useState(false);
     const [newTag, setNewTag] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const [postId, setPostId] = useState<number | undefined>(undefined);
 
     // Initialize Quill editor
     useEffect(() => {
@@ -41,15 +41,24 @@ const BlogEditor = () => {
     // Load existing post if editing
     useEffect(() => {
         if (slug) {
-            const post = getPostBySlug(slug);
-            if (post) {
-                setTitle(post.title);
-                setSlugValue(post.slug);
-                setTags(post.tags);
-                if (quillRef.current) {
-                    quillRef.current.root.innerHTML = post.content;
+            const fetchPost = async () => {
+                try {
+                    const response = await getJson<{ data: any }>(`/api/blog/slug/${slug}`);
+                    const post = response.data;
+                    if (post) {
+                        setPostId(post.id);
+                        setTitle(post.title);
+                        setSlugValue(post.slug);
+                        setTags(post.tags || []);
+                        if (quillRef.current) {
+                            quillRef.current.root.innerHTML = post.content;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading post:', error);
                 }
-            }
+            };
+            fetchPost();
         }
     }, [slug]);
 
@@ -74,7 +83,7 @@ const BlogEditor = () => {
         setTags(tags.filter((tag) => tag !== tagToRemove));
     };
 
-    const handleSave = (publishStatus: PostStatus) => {
+    const handleSave = async (publishStatus: PostStatus) => {
         if (!title.trim()) {
             alert('Please enter a title');
             return;
@@ -89,27 +98,22 @@ const BlogEditor = () => {
 
         try {
             const content = quillRef.current.root.innerHTML;
-            const existingSlugs = getAllSlugs().filter((s) => s !== slug);
-            const finalSlug = generateUniqueSlug(slugValue || slugify(title), existingSlugs);
+            const finalSlug = slugValue || slugify(title);
 
-            const postData = {
+            const postData: any = {
                 title,
                 slug: finalSlug,
                 content,
+                author: 'Admin',
+                published: publishStatus === 'published',
                 tags,
-                status: publishStatus,
             };
 
-            console.log(postData);
-
-            if (slug) {
-                // Update existing post
-                updatePost(slug, postData);
-            } else {
-                // Create new post
-                createPost(postData);
+            if (postId) {
+                postData.id = postId;
             }
 
+            await postJson('/api/blog', postData);
             navigate(`/blog/${finalSlug}`);
         } catch (error) {
             console.error('Error saving post:', error);

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import type { PostType } from '@/blog/service';
-import { deletePost } from '@/blog/storage/blogStorage';
 import { useState } from 'react';
 
 interface BlogListProps {
@@ -12,11 +11,18 @@ interface BlogListProps {
 const BlogList = ({ posts, onPostDeleted }: BlogListProps) => {
     const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
 
-    const handleDelete = (slug: string, title: string) => {
+    const handleDelete = async (id: number, title: string) => {
         if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-            setDeletingSlug(slug);
+            setDeletingSlug(id.toString());
             try {
-                deletePost(slug);
+                const response = await fetch(`/api/blog/${id}`, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete post');
+                }
+
                 onPostDeleted?.();
             } catch (error) {
                 console.error('Error deleting post:', error);
@@ -28,7 +34,7 @@ const BlogList = ({ posts, onPostDeleted }: BlogListProps) => {
     };
 
     // Sort posts by creation date (newest first)
-    const sortedPosts = [...posts].sort((a, b) => b.createdAt - a.createdAt);
+    const sortedPosts = [...posts].sort((a, b) => b.created_at - a.created_at);
 
     return (
         <div className="space-y-6">
@@ -71,15 +77,15 @@ const BlogList = ({ posts, onPostDeleted }: BlogListProps) => {
                                     </Link>
 
                                     <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-muted-foreground">
-                                        <span>{moment(post.createdAt).format('MMM D, YYYY')}</span>
-                                        {post.status && (
+                                        <span>{moment(post.created_at).format('MMM D, YYYY')}</span>
+                                        {post.published && (
                                             <span
-                                                className={`px-2 py-1 rounded text-xs font-medium ${post.status === 'published'
-                                                        ? 'bg-green-500/10 text-green-500'
-                                                        : 'bg-yellow-500/10 text-yellow-500'
+                                                className={`px-2 py-1 rounded text-xs font-medium ${post.published
+                                                    ? 'bg-green-500/10 text-green-500'
+                                                    : 'bg-yellow-500/10 text-yellow-500'
                                                     }`}
                                             >
-                                                {post.status}
+                                                {post.published ? 'published' : 'draft'}
                                             </span>
                                         )}
                                         {post.tags && post.tags.length > 0 && (
@@ -107,11 +113,11 @@ const BlogList = ({ posts, onPostDeleted }: BlogListProps) => {
                                     </Link>
                                     <button
                                         type="button"
-                                        onClick={() => handleDelete(post.slug, post.title)}
-                                        disabled={deletingSlug === post.slug}
+                                        onClick={() => handleDelete(post.id, post.title)}
+                                        disabled={deletingSlug === post.id.toString()}
                                         className="px-3 py-1 text-sm border border-red-500 text-red-500 rounded hover:bg-red-500/10 transition-colors disabled:opacity-50"
                                     >
-                                        {deletingSlug === post.slug ? 'Deleting...' : 'Delete'}
+                                        {deletingSlug === post.id.toString() ? 'Deleting...' : 'Delete'}
                                     </button>
                                 </div>
                             </div>

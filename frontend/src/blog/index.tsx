@@ -4,8 +4,7 @@ import Post from "./components/Post";
 import BlogEditor from "./components/BlogEditor";
 import BlogList from "./components/BlogList";
 import Navigation from "./components/Navigation";
-import { getAllPosts, initializeStorage } from "./storage/blogStorage";
-import type { PostType } from "./service";
+import { getJson, type PostType } from "./service";
 // import "../blog/styles/quill-custom.css";
 
 const PostWithSlug = () => {
@@ -14,10 +13,18 @@ const PostWithSlug = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const posts = getAllPosts();
-    const foundPost = posts.find((p) => p.slug === slug);
-    setPost(foundPost || null);
-    setLoading(false);
+    const fetchPost = async () => {
+      try {
+        const post = await getJson<PostType>(`/api/blog/slug/${slug}`);
+        setPost(post);
+      } catch (error) {
+        console.error('Error fetching post:', error);
+        setPost(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPost();
   }, [slug]);
 
   if (loading) {
@@ -49,13 +56,17 @@ const PostWithSlug = () => {
 const BlogHome = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
 
-  const loadPosts = () => {
-    const allPosts = getAllPosts();
-    setPosts(allPosts);
+  const loadPosts = async () => {
+    try {
+      const response = await getJson<{ data: PostType[] }>('/api/blog');
+      setPosts(response.data);
+    } catch (error) {
+      console.error('Error loading posts:', error);
+      setPosts([]);
+    }
   };
 
   useEffect(() => {
-    initializeStorage();
     loadPosts();
   }, []);
 
