@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
-export function useActiveSectionObserver(
+export const useActiveSectionObserver = (
   sectionIds: string[],
   setActiveSection: (id: string) => void
-) {
+) => {
   useEffect(() => {
     const handleIntersect = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry: IntersectionObserverEntry) => {
